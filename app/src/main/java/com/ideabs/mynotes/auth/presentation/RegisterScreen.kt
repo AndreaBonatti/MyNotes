@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,18 +32,19 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ideabs.mynotes.R
 
 @Composable
 fun RegisterScreen(
-    onRegisterClicked: (String, String) -> Unit
+    viewModel: RegisterViewModel
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var emailError by remember { mutableStateOf<String?>(null) }
     var passwordError by remember { mutableStateOf<String?>(null) }
+
+    val registrationState by viewModel.registrationState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -110,12 +113,28 @@ fun RegisterScreen(
                     getPasswordError(trimmedPassword) else null
 
                 if (emailError == null && passwordError == null) {
-                    onRegisterClicked(trimmedEmail, trimmedPassword)
+                    viewModel.register(trimmedEmail, trimmedPassword)
                 }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Register")
+        }
+
+        when (registrationState) {
+            is RegistrationState.Loading -> {
+                CircularProgressIndicator()
+            }
+
+            is RegistrationState.Success -> {
+                Text("Registration successful!", color = Color.Green)
+            }
+
+            is RegistrationState.Error -> {
+                Text((registrationState as RegistrationState.Error).message, color = Color.Red)
+            }
+
+            else -> {}
         }
     }
 }
@@ -132,7 +151,8 @@ fun PasswordTextField(
         value = password,
         onValueChange = onPasswordChange,
         label = { Text("Password") },
-        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        visualTransformation = if (passwordVisible)
+            VisualTransformation.None else PasswordVisualTransformation(),
         isError = errorMessage != null,
         modifier = Modifier.fillMaxWidth(),
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
@@ -180,12 +200,5 @@ fun getPasswordError(password: String): String? {
         !password.any { "!@#\$%^&*()-_+=<>?/".contains(it) } -> "Password must include a special character"
         password.any { it.isWhitespace() } -> "Password cannot contain spaces"
         else -> null
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RegistrationScreenPreview() {
-    RegisterScreen { email, password ->
     }
 }

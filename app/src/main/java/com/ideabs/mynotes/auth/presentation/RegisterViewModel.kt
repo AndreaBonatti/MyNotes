@@ -2,27 +2,29 @@ package com.ideabs.mynotes.auth.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
+import com.ideabs.mynotes.core.data.ApiRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class RegisterViewModel : ViewModel() {
+class RegisterViewModel(
+    private val apiRepository: ApiRepository
+) : ViewModel() {
 
     private val _registrationState = MutableStateFlow<RegistrationState>(RegistrationState.Idle)
-    val registrationState: StateFlow<RegistrationState> = _registrationState
+    val registrationState: StateFlow<RegistrationState> = _registrationState.asStateFlow()
 
     fun register(email: String, password: String) {
         viewModelScope.launch {
             _registrationState.value = RegistrationState.Loading
 
-            delay(1000) // // Simulated delay — replace with real registration logic
+            val result = apiRepository.register(email, password)
 
-            if (email == "already@used.com") {
-                _registrationState.value = RegistrationState.Error("Email is already in use")
-            } else {
-                _registrationState.value = RegistrationState.Success
-            }
+            _registrationState.value = result.fold(
+                onSuccess = { RegistrationState.Success },
+                onFailure = { RegistrationState.Error(it.message ?: "Unknown error") }
+            )
         }
     }
 
