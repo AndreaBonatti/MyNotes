@@ -34,8 +34,8 @@ class RegisterViewModel(
 }
 
 sealed class RegistrationState {
-    object Idle : RegistrationState()
-    object Loading : RegistrationState()
-    object Success : RegistrationState()
+    data object Idle : RegistrationState()
+    data object Loading : RegistrationState()
+    data object Success : RegistrationState()
     data class Error(val message: String) : RegistrationState()
 }
