@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
@@ -51,7 +52,8 @@ fun RegisterScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .imePadding(),
         verticalArrangement = Arrangement.Center
     ) {
         Text(text = "Register", style = MaterialTheme.typography.headlineMedium)
@@ -95,6 +97,16 @@ fun RegisterScreen(
             },
             errorMessage = passwordError
         )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(
+            text = "Password must be at least 8 characters, with 1 lowercase, 1 uppercase, 1 digit, and 1 special character.",
+            color = Color.Gray,
+            style = MaterialTheme.typography.bodySmall
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
 
         Box(modifier = Modifier.height(16.dp)) {
             androidx.compose.animation.AnimatedVisibility(
