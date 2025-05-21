@@ -60,7 +60,10 @@ fun RegisterScreen(
 
         OutlinedTextField(
             value = email,
-            onValueChange = { email = it },
+            onValueChange = {
+                email = it
+                emailError = if (!isValidEmail(it)) "Invalid email" else null
+            },
             label = { Text("Email") },
             isError = emailError != null,
             modifier = Modifier.fillMaxWidth(),
@@ -85,7 +88,10 @@ fun RegisterScreen(
 
         PasswordTextField(
             password = password,
-            onPasswordChange = { password = it },
+            onPasswordChange = {
+                password = it
+                passwordError = getPasswordError(it)
+            },
             errorMessage = passwordError
         )
 
