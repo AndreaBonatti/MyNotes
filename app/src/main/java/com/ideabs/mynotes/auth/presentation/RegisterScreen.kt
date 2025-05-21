@@ -107,6 +107,8 @@ fun RegisterScreen(
 
         Button(
             onClick = {
+                viewModel.resetState()
+
                 val trimmedEmail = email.trim()
                 val trimmedPassword = password.trim()
 
