@@ -66,6 +66,10 @@ fun RegisterScreen(
                 email = it
                 val trimmedEmail = it.trim()
                 emailError = if (!isValidEmail(trimmedEmail)) "Invalid email" else null
+                // Reset any previous registration error when user starts typing
+                if (registrationState is RegistrationState.Error) {
+                    viewModel.resetState()
+                }
             },
             label = { Text("Email") },
             isError = emailError != null,
@@ -94,6 +98,10 @@ fun RegisterScreen(
             onPasswordChange = {
                 password = it
                 passwordError = getPasswordError(it)
+                // Reset any previous registration error when user starts typing
+                if (registrationState is RegistrationState.Error) {
+                    viewModel.resetState()
+                }
             },
             errorMessage = passwordError
         )
