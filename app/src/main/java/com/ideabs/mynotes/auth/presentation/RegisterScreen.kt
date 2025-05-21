@@ -62,7 +62,8 @@ fun RegisterScreen(
             value = email,
             onValueChange = {
                 email = it
-                emailError = if (!isValidEmail(it)) "Invalid email" else null
+                val trimmedEmail = it.trim()
+                emailError = if (!isValidEmail(trimmedEmail)) "Invalid email" else null
             },
             label = { Text("Email") },
             isError = emailError != null,
@@ -111,6 +112,9 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        val isFormValid =
+            emailError == null && passwordError == null && email.isNotBlank() && password.isNotBlank()
+
         Button(
             onClick = {
                 viewModel.resetState()
@@ -126,6 +130,7 @@ fun RegisterScreen(
                     viewModel.register(trimmedEmail, trimmedPassword)
                 }
             },
+            enabled = isFormValid,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Register")
