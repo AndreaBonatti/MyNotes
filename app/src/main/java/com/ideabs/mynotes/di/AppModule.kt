@@ -24,7 +24,7 @@ val appModule = module {
     single<ApiRepository> {
         RemoteApiRepository(
             client = get(),
-            baseUrl = "" //TODO insert the api entrypoint
+            baseUrl = "192.168.0.56" //TODO insert the api entrypoint
         )
     }
 

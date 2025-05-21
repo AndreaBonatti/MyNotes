@@ -14,9 +14,7 @@ fun RegisterRoute(
     val state by viewModel.registrationState.collectAsState()
 
     RegisterScreen(
-        onRegisterClicked = { email, password ->
-            viewModel.register(email, password)
-        }
+        viewModel = viewModel
     )
 
     when (val s = state) {
