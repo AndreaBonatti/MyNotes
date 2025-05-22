@@ -1,6 +1,5 @@
 package com.ideabs.mynotes.auth.presentation.login
 
-import android.util.Patterns
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
@@ -16,8 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -25,19 +22,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.ideabs.mynotes.R
+import com.ideabs.mynotes.auth.presentation.common.PasswordTextField
+import com.ideabs.mynotes.auth.presentation.common.isValidEmail
 
 @Composable
 fun LoginScreen(
@@ -120,10 +113,7 @@ fun LoginScreen(
                 val trimmedEmail = email.trim()
                 val trimmedPassword = password.trim()
 
-                emailError = if (!com.ideabs.mynotes.auth.presentation.register.isValidEmail(
-                        trimmedEmail
-                    )
-                ) "Invalid email" else null
+                emailError = if (!isValidEmail(trimmedEmail)) "Invalid email" else null
 
                 if (emailError == null) {
                     viewModel.login(trimmedEmail, trimmedPassword)
@@ -162,41 +152,3 @@ fun LoginScreen(
         }
     }
 }
-
-@Composable
-fun PasswordTextField(
-    password: String,
-    onPasswordChange: (String) -> Unit,
-    errorMessage: String? = null
-) {
-    var passwordVisible by remember { mutableStateOf(false) }
-
-    OutlinedTextField(
-        value = password,
-        onValueChange = onPasswordChange,
-        label = { Text("Password") },
-        visualTransformation = if (passwordVisible)
-            VisualTransformation.None else PasswordVisualTransformation(),
-        isError = errorMessage != null,
-        modifier = Modifier.fillMaxWidth(),
-        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-        trailingIcon = {
-            val image = if (passwordVisible)
-                ImageVector.vectorResource(R.drawable.ic_visibility)
-            else
-                ImageVector.vectorResource(R.drawable.ic_visibility_off)
-
-            val description = if (passwordVisible) "Hide password" else "Show password"
-
-            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                Icon(imageVector = image, contentDescription = description)
-            }
-        }
-    )
-}
-
-fun isValidEmail(email: String): Boolean {
-    return Patterns.EMAIL_ADDRESS.matcher(email).matches()
-}
-
-
