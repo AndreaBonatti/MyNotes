@@ -17,6 +17,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import com.ideabs.mynotes.R
 
 @Composable
@@ -49,4 +50,10 @@ fun PasswordTextField(
             }
         }
     )
+}
+
+@Composable
+@Preview
+fun PasswordTextFieldPreview() {
+    PasswordTextField("#0123abcDEF", {}, null)
 }
