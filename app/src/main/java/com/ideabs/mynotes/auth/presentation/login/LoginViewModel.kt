@@ -29,11 +29,8 @@ class LoginViewModel(
                         isValidJwt(data.accessToken) &&
                         isValidJwt(data.refreshToken)
                     ) {
-                        LoginState.Success(
-                            accessToken = data.accessToken,
-                            refreshToken = data.refreshToken,
-                            tokenType = data.tokenType
-                        )
+                        // TODO save the accessToken and the refreshToken
+                        LoginState.Success
                     } else {
                         LoginState.Error("Invalid token format received from the server")
                     }
@@ -88,9 +85,7 @@ class LoginViewModel(
 sealed class LoginState {
     data object Idle : LoginState()
     data object Loading : LoginState()
-    data class Success(
-        val accessToken: String, val refreshToken: String, val tokenType: String
-    ) : LoginState()
+    data object Success : LoginState()
 
     data class Error(val message: String) : LoginState()
 }

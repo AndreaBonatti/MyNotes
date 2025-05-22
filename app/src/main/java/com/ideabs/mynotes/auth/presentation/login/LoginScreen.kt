@@ -38,7 +38,6 @@ import com.ideabs.mynotes.auth.presentation.common.isValidEmail
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
-    onLoginSuccess: (String, String, String) -> Unit,
     onNavigateToRegister: () -> Unit
 ) {
     var email by rememberSaveable { mutableStateOf("") }
@@ -142,7 +141,6 @@ fun LoginScreen(
 
                 is LoginState.Success -> {
                     Text("Login successful!", color = Color.Green)
-                    // TODO call the onLoginSuccess function
                 }
 
                 is LoginState.Error -> {
