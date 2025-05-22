@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,12 +13,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -35,7 +38,8 @@ import com.ideabs.mynotes.auth.presentation.common.isValidEmail
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
-    onLoginSuccess: (String, String, String) -> Unit
+    onLoginSuccess: (String, String, String) -> Unit,
+    onNavigateToRegister: () -> Unit
 ) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -148,6 +152,20 @@ fun LoginScreen(
                 else -> {
                     // Optionally keep empty space here
                 }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "Don't have an account?")
+            Spacer(modifier = Modifier.width(4.dp))
+            TextButton(onClick = onNavigateToRegister) {
+                Text("Register")
             }
         }
     }

@@ -17,6 +17,9 @@ fun LoginRoute(
         viewModel = viewModel,
         onLoginSuccess = { accessToken, refreshToken, tokenType ->
             // TODO
+        },
+        onNavigateToRegister = {
+            navController.navigate("register")
         }
     )
 
