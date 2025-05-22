@@ -3,6 +3,7 @@ package com.ideabs.mynotes.auth.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ideabs.mynotes.core.data.ApiRepository
+import com.ideabs.mynotes.core.data.TokenManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -10,7 +11,8 @@ import kotlinx.coroutines.launch
 import java.util.Base64
 
 class LoginViewModel(
-    private val apiRepository: ApiRepository
+    private val apiRepository: ApiRepository,
+    private val tokenManager: TokenManager
 ) : ViewModel() {
 
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
@@ -30,6 +32,9 @@ class LoginViewModel(
                         isValidJwt(data.refreshToken)
                     ) {
                         // TODO save the accessToken and the refreshToken
+                        viewModelScope.launch {
+                            tokenManager.saveTokens(data.accessToken, data.refreshToken)
+                        }
                         LoginState.Success
                     } else {
                         LoginState.Error("Invalid token format received from the server")
