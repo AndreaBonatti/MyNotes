@@ -1,4 +1,4 @@
-package com.ideabs.mynotes.auth.presentation
+package com.ideabs.mynotes.auth.presentation.login
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -7,26 +7,29 @@ import androidx.navigation.NavController
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun RegisterRoute(
+fun LoginRoute(
     navController: NavController
 ) {
-    val viewModel: RegisterViewModel = koinViewModel()
-    val state by viewModel.registrationState.collectAsState()
+    val viewModel: LoginViewModel = koinViewModel()
+    val state by viewModel.loginState.collectAsState()
 
-    RegisterScreen(
-        viewModel = viewModel
+    LoginScreen(
+        viewModel = viewModel,
+        onLoginSuccess = { accessToken, refreshToken, tokenType ->
+            // TODO
+        }
     )
 
     when (val s = state) {
-        is RegistrationState.Loading -> {
+        is LoginState.Loading -> {
             // Show loading indicator
         }
 
-        is RegistrationState.Error -> {
+        is LoginState.Error -> {
             // Show error message: s.message
         }
 
-        is RegistrationState.Success -> {
+        is LoginState.Success -> {
             // Navigate to next screen
         }
 

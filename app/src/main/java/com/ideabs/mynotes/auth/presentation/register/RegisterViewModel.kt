@@ -1,4 +1,4 @@
-package com.ideabs.mynotes.auth.presentation
+package com.ideabs.mynotes.auth.presentation.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

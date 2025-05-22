@@ -1,6 +1,7 @@
 package com.ideabs.mynotes.di
 
-import com.ideabs.mynotes.auth.presentation.RegisterViewModel
+import com.ideabs.mynotes.auth.presentation.login.LoginViewModel
+import com.ideabs.mynotes.auth.presentation.register.RegisterViewModel
 import com.ideabs.mynotes.core.data.ApiRepository
 import com.ideabs.mynotes.core.data.RemoteApiRepository
 import io.ktor.client.HttpClient
@@ -29,4 +30,5 @@ val appModule = module {
     }
 
     viewModel { RegisterViewModel(apiRepository = get()) }
+    viewModel { LoginViewModel(apiRepository = get()) }
 }

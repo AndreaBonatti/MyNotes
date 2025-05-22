@@ -1,4 +1,4 @@
-package com.ideabs.mynotes.auth.presentation
+package com.ideabs.mynotes.auth.presentation.register
 
 import android.util.Patterns
 import androidx.compose.animation.fadeIn

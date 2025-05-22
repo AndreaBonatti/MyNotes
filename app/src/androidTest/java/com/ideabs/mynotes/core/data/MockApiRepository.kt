@@ -8,4 +8,12 @@ class MockAppRepository : ApiRepository {
             Result.failure(Exception("Mock error: invalid email"))
         }
     }
+
+    override suspend fun login(email: String, password: String): Result<RemoteApiRepository.TokenData> {
+        return if (email == "test@test.com" && password == "Password#0"){
+            Result.success(RemoteApiRepository.TokenData("","",""))
+        } else {
+            Result.failure(Exception("Mock error: login failed"))
+        }
+    }
 }
