@@ -18,6 +18,7 @@ fun LoginRoute(
     LoginScreen(
         viewModel = viewModel,
         onNavigateToRegister = {
+            viewModel.resetState()
             navController.navigate("register")
         }
     )
