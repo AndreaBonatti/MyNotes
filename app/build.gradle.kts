@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.ideabs.mynotes"
+    namespace = "com.andreabonatti92.mynotes"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.ideabs.mynotes"
+        applicationId = "com.andreabonatti92.mynotes"
         minSdk = 29
         targetSdk = 35
         versionCode = 1
