@@ -6,6 +6,7 @@ import com.andreabonatti92.mynotes.core.data.UserPreferences
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val userPreferences: UserPreferences
@@ -19,4 +20,11 @@ class HomeViewModel(
 
     val refreshToken: StateFlow<String?> = userPreferences.refreshTokenFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    fun logout(onLogoutComplete: () -> Unit) {
+        viewModelScope.launch {
+            userPreferences.clearUserPreferences()
+            onLogoutComplete()
+        }
+    }
 }

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,7 +27,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
-    onNavigateToNotes: () -> Unit
+    onNavigateToNotes: () -> Unit,
+    onLogout: () -> Unit
 ) {
     val email by viewModel.email.collectAsState()
     val accessToken by viewModel.accessToken.collectAsState()
@@ -70,6 +72,16 @@ fun HomeScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Go to your notes")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = { viewModel.logout(onLogout) },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors().copy(containerColor = Color.Red)
+        ) {
+            Text("Logout", color = Color.White)
         }
     }
 }
