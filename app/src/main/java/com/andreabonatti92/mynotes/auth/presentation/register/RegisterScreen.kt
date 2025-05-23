@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.andreabonatti92.mynotes.auth.presentation.common.PasswordTextField
@@ -44,6 +45,8 @@ fun RegisterScreen(
     var passwordError by rememberSaveable { mutableStateOf<String?>(null) }
 
     val registrationState by viewModel.registrationState.collectAsState()
+
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = Modifier
@@ -133,6 +136,8 @@ fun RegisterScreen(
 
         Button(
             onClick = {
+                keyboardController?.hide()
+
                 viewModel.resetState()
 
                 val trimmedEmail = email.trim()

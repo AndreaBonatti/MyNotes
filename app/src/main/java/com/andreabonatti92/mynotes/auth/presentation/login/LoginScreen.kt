@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.andreabonatti92.mynotes.auth.presentation.common.PasswordTextField
@@ -46,6 +47,8 @@ fun LoginScreen(
     var passwordError by rememberSaveable { mutableStateOf<String?>(null) }
 
     val loginState by viewModel.loginState.collectAsState()
+
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = Modifier
@@ -104,13 +107,15 @@ fun LoginScreen(
             errorMessage = passwordError
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
         val isFormValid =
             emailError == null && passwordError == null && email.isNotBlank() && password.isNotBlank()
 
         Button(
             onClick = {
+                keyboardController?.hide()
+
                 viewModel.resetState()
 
                 val trimmedEmail = email.trim()
@@ -162,7 +167,10 @@ fun LoginScreen(
         ) {
             Text(text = "Don't have an account?")
             Spacer(modifier = Modifier.width(4.dp))
-            TextButton(onClick = onNavigateToRegister) {
+            TextButton(onClick = {
+                keyboardController?.hide()
+                onNavigateToRegister()
+            }) {
                 Text("Register")
             }
         }
