@@ -10,7 +10,7 @@ import com.ideabs.mynotes.auth.presentation.register.RegisterViewModel
 import com.ideabs.mynotes.core.data.ApiRepository
 import com.ideabs.mynotes.core.data.HttpClientFactory
 import com.ideabs.mynotes.core.data.RemoteApiRepository
-import com.ideabs.mynotes.core.data.TokenManager
+import com.ideabs.mynotes.core.data.UserPreferences
 import io.ktor.client.engine.cio.CIO
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
@@ -26,7 +26,7 @@ val appModule = module {
         )
     }
 
-    single { TokenManager(get()) }
+    single { UserPreferences(get()) }
 
     single { HttpClientFactory.create(CIO.create()) }
 

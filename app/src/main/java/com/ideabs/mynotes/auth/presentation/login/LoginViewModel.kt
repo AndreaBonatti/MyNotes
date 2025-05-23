@@ -3,7 +3,7 @@ package com.ideabs.mynotes.auth.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ideabs.mynotes.core.data.ApiRepository
-import com.ideabs.mynotes.core.data.TokenManager
+import com.ideabs.mynotes.core.data.UserPreferences
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,7 +12,7 @@ import java.util.Base64
 
 class LoginViewModel(
     private val apiRepository: ApiRepository,
-    private val tokenManager: TokenManager
+    private val tokenManager: UserPreferences
 ) : ViewModel() {
 
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
@@ -31,9 +31,10 @@ class LoginViewModel(
                         isValidJwt(data.accessToken) &&
                         isValidJwt(data.refreshToken)
                     ) {
-                        // TODO save the accessToken and the refreshToken
                         viewModelScope.launch {
-                            tokenManager.saveTokens(data.accessToken, data.refreshToken)
+                            tokenManager.saveUserPreferences(
+                                email, data.accessToken, data.refreshToken
+                            )
                         }
                         LoginState.Success
                     } else {
