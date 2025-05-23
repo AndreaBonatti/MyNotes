@@ -12,7 +12,7 @@ import java.util.Base64
 
 class LoginViewModel(
     private val apiRepository: ApiRepository,
-    private val tokenManager: UserPreferences
+    private val userPreferences: UserPreferences
 ) : ViewModel() {
 
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
@@ -32,7 +32,7 @@ class LoginViewModel(
                         isValidJwt(data.refreshToken)
                     ) {
                         viewModelScope.launch {
-                            tokenManager.saveUserPreferences(
+                            userPreferences.saveUserPreferences(
                                 email, data.accessToken, data.refreshToken
                             )
                         }
