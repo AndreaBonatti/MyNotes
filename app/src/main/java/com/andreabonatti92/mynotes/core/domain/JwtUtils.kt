@@ -2,7 +2,7 @@ package com.andreabonatti92.mynotes.core.domain
 
 import java.util.Base64
 
-public fun isValidJwt(token: String): Boolean {
+fun isValidJwt(token: String): Boolean {
     return token.count { it == '.' } == 2 && !isJwtExpired(token)
 }
 
