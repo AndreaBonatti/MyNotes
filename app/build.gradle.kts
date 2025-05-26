@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.bundles.ktor)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.material)
 
     testImplementation(libs.junit)
 

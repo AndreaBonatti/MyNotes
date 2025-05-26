@@ -12,9 +12,11 @@ import kotlinx.coroutines.launch
 class NoteListViewModel(
     private val apiRepository: ApiRepository
 ) : ViewModel() {
-
     private val _noteListState = MutableStateFlow<NoteListState>(NoteListState.Loading)
     val noteListState: StateFlow<NoteListState> = _noteListState.asStateFlow()
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     init {
         loadNotes()
@@ -23,11 +25,33 @@ class NoteListViewModel(
     private fun loadNotes() {
         viewModelScope.launch {
             _noteListState.value = NoteListState.Loading
-            val result = apiRepository.getNotes()
-            _noteListState.value = result.fold(
-                onSuccess = { NoteListState.Success(it) },
-                onFailure = { NoteListState.Error(it.message ?: "Unknown error") }
-            )
+            try {
+                val result = apiRepository.getNotes()
+                _noteListState.value = result.fold(
+                    onSuccess = { NoteListState.Success(it) },
+                    onFailure = { NoteListState.Error(it.message ?: "Unknown error") }
+                )
+            } catch (e: Exception) {
+                _noteListState.value = NoteListState.Error(e.message ?: "Unknown error")
+            }
+        }
+    }
+
+    fun refreshNotes() {
+        if (_isRefreshing.value) return
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            try {
+                val result = apiRepository.getNotes()
+                _noteListState.value = result.fold(
+                    onSuccess = { NoteListState.Success(it) },
+                    onFailure = { NoteListState.Error(it.message ?: "Unknown error") }
+                )
+            } catch (e: Exception) {
+                _noteListState.value = NoteListState.Error(e.message ?: "Unknown error")
+            } finally {
+                _isRefreshing.value = false
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ nav = "2.9.0"
 ktor = "2.3.12"
 kotlinxSerialization = "1.7.3"
 datastore= "1.1.7"
+material-version= "1.5.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,6 +42,7 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+androidx-material = { group = "androidx.compose.material", name = "material", version = "material-version"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
