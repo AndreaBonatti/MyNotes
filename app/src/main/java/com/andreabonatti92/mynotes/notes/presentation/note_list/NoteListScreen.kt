@@ -30,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.andreabonatti92.mynotes.notes.domain.Note
@@ -79,6 +80,8 @@ fun NoteListScreen(viewModel: NoteListViewModel) {
                 }
 
                 is NoteListState.Success -> {
+                    val sortedNotes = state.notes.sortedByDescending { it.createdAt }
+
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -91,7 +94,7 @@ fun NoteListScreen(viewModel: NoteListViewModel) {
                             modifier = Modifier.padding(bottom = 16.dp)
                         )
                         LazyColumn {
-                            items(state.notes) { note ->
+                            items(sortedNotes) { note ->
                                 NoteItem(note)
                             }
                         }
@@ -112,18 +115,35 @@ fun NoteListScreen(viewModel: NoteListViewModel) {
 
 @Composable
 fun NoteItem(note: Note) {
+    val textColor = if (note.color.isDark()) Color.White else Color.Black
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = note.color),
         elevation = CardDefaults.cardElevation()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = note.title, style = MaterialTheme.typography.titleMedium)
+            Text(
+                text = note.title,
+                style = MaterialTheme.typography.titleMedium,
+                color = textColor
+            )
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            Text(text = note.content, style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = note.content,
+                style = MaterialTheme.typography.bodyMedium,
+                color = textColor
+            )
         }
     }
+}
+
+fun Color.isDark(): Boolean {
+    // Calculate luminance using the Rec. 709 formula
+    val luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
+    return luminance < 0.5f
 }
