@@ -12,6 +12,7 @@ import com.andreabonatti92.mynotes.core.data.HttpClientFactory
 import com.andreabonatti92.mynotes.core.data.RemoteApiRepository
 import com.andreabonatti92.mynotes.core.data.UserPreferences
 import com.andreabonatti92.mynotes.home.presentation.HomeViewModel
+import com.andreabonatti92.mynotes.notes.presentation.note_list.NoteListViewModel
 import com.andreabonatti92.mynotes.splash.SplashViewModel
 import io.ktor.client.engine.cio.CIO
 import org.koin.android.ext.koin.androidContext
@@ -43,4 +44,5 @@ val appModule = module {
     viewModel { LoginViewModel(apiRepository = get(), userPreferences = get()) }
     viewModel { HomeViewModel(userPreferences = get()) }
     viewModel { SplashViewModel(userPreferences = get()) }
+    viewModel { NoteListViewModel(userPreferences = get()) }
 }

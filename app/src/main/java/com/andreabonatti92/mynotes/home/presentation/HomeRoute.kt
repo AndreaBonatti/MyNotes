@@ -12,7 +12,14 @@ fun HomeRoute(
 
     HomeScreen(
         viewModel = viewModel,
-        onNavigateToNotes = {},
+        onNavigateToNotes = {
+            navController.navigate("note_list") {
+                // TODO popUpTo is needed?
+//                popUpTo("") {
+//                    inclusive = true
+//                }
+            }
+        },
         onLogout = {
             navController.navigate("login") {
                 popUpTo("home") {
