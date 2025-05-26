@@ -1,41 +1,39 @@
 package com.andreabonatti92.mynotes.notes.presentation.note_list
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andreabonatti92.mynotes.core.data.ApiRepository
 import com.andreabonatti92.mynotes.notes.domain.Note
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class NoteListViewModel(
     private val apiRepository: ApiRepository
 ) : ViewModel() {
 
-    var notes by mutableStateOf<List<Note>>(emptyList())
-        private set
-
-    var isLoading by mutableStateOf(true)
-        private set
-
-    var errorMessage by mutableStateOf<String?>(null)
-        private set
+    private val _noteListState = MutableStateFlow<NoteListState>(NoteListState.Loading)
+    val noteListState: StateFlow<NoteListState> = _noteListState.asStateFlow()
 
     init {
         loadNotes()
     }
 
-    fun loadNotes() {
+    private fun loadNotes() {
         viewModelScope.launch {
-            isLoading = true
+            _noteListState.value = NoteListState.Loading
             val result = apiRepository.getNotes()
-            result.onSuccess {
-                notes = it
-            }.onFailure {
-                errorMessage = it.localizedMessage ?: "Unknown error"
-            }
-            isLoading = false
+            _noteListState.value = result.fold(
+                onSuccess = { NoteListState.Success(it) },
+                onFailure = { NoteListState.Error(it.message ?: "Unknown error") }
+            )
         }
     }
+}
+
+sealed class NoteListState {
+    data object Loading : NoteListState()
+    data class Success(val notes: List<Note>) : NoteListState()
+    data class Error(val message: String) : NoteListState()
 }
