@@ -1,13 +1,21 @@
 package com.andreabonatti92.mynotes.core.data
 
+import android.util.Log
+import com.andreabonatti92.mynotes.notes.data.dto.NoteDto
+import com.andreabonatti92.mynotes.notes.data.mappers.toNote
+import com.andreabonatti92.mynotes.notes.domain.Note
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.request.accept
+import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import kotlinx.serialization.SerialName
@@ -16,7 +24,8 @@ import kotlinx.serialization.json.Json
 
 class RemoteApiRepository(
     private val client: HttpClient,
-    private val baseUrl: String
+    private val baseUrl: String,
+    private val tokenProvider: TokenProvider
 ) : ApiRepository {
 
     override suspend fun register(email: String, password: String): Result<Unit> {
@@ -97,4 +106,30 @@ class RemoteApiRepository(
 
     @Serializable
     data class ErrorResponse(val detail: String)
+
+    override suspend fun getNotes(): Result<List<Note>> {
+        return try {
+            val token = tokenProvider.getAccessToken()
+            Log.d("JWT TOKEN", token)
+            val response: HttpResponse = client.get("$baseUrl/notes") {
+                header(HttpHeaders.Authorization, "Bearer $token")
+                accept(ContentType.Application.Json)
+            }
+
+            if (response.status.isSuccess()) {
+                // Deserialize body into List<Note>
+                val body: List<NoteDto> = response.body()
+                val notes = body.map { it.toNote() }
+                Result.success(notes)
+            } else {
+                val message = parseErrorBody(response.bodyAsText())
+                Result.failure(Exception(message))
+            }
+        } catch (e: ClientRequestException) {
+            val message = parseErrorBody(e.response.bodyAsText())
+            Result.failure(Exception(message))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

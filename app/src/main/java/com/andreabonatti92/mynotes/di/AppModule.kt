@@ -10,6 +10,8 @@ import com.andreabonatti92.mynotes.auth.presentation.register.RegisterViewModel
 import com.andreabonatti92.mynotes.core.data.ApiRepository
 import com.andreabonatti92.mynotes.core.data.HttpClientFactory
 import com.andreabonatti92.mynotes.core.data.RemoteApiRepository
+import com.andreabonatti92.mynotes.core.data.TokenProvider
+import com.andreabonatti92.mynotes.core.data.TokenProviderImpl
 import com.andreabonatti92.mynotes.core.data.UserPreferences
 import com.andreabonatti92.mynotes.home.presentation.HomeViewModel
 import com.andreabonatti92.mynotes.notes.presentation.note_list.NoteListViewModel
@@ -31,12 +33,17 @@ val appModule = module {
 
     single { UserPreferences(get()) }
 
+    single<TokenProvider> {
+        TokenProviderImpl(get())
+    }
+
     single { HttpClientFactory.create(CIO.create()) }
 
     single<ApiRepository> {
         RemoteApiRepository(
             client = get(),
-            baseUrl = BuildConfig.BASE_URL
+            baseUrl = BuildConfig.BASE_URL,
+            tokenProvider = get()
         )
     }
 
@@ -44,5 +51,5 @@ val appModule = module {
     viewModel { LoginViewModel(apiRepository = get(), userPreferences = get()) }
     viewModel { HomeViewModel(userPreferences = get()) }
     viewModel { SplashViewModel(userPreferences = get()) }
-    viewModel { NoteListViewModel(userPreferences = get()) }
+    viewModel { NoteListViewModel(apiRepository = get()) }
 }
