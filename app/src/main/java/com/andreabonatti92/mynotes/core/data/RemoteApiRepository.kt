@@ -10,6 +10,7 @@ import com.andreabonatti92.mynotes.auth.data.model.TokenData
 import com.andreabonatti92.mynotes.core.domain.isValidJwt
 import com.andreabonatti92.mynotes.notes.data.dto.NoteDto
 import com.andreabonatti92.mynotes.notes.data.mappers.toNote
+import com.andreabonatti92.mynotes.notes.data.model.NoteRequest
 import com.andreabonatti92.mynotes.notes.domain.Note
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -127,6 +128,32 @@ class RemoteApiRepository(
         } catch (e: Exception) {
             // Network error, 5xx, etc.
             Result.failure(e)
+        }
+    }
+
+    override suspend fun insertNote(title: String, content: String, color: Int): Result<Note> {
+        return withAccessTokenRefresh { token ->
+            try {
+                val response: HttpResponse = client.post("$baseUrl/notes") {
+                    header(HttpHeaders.Authorization, "Bearer $token")
+                    setBody(NoteRequest(title, content, color))
+                }
+
+                if (response.status.isSuccess()) {
+                    // Deserialize body into Note
+                    val body: NoteDto = response.body()
+                    val insertedNote = body.toNote()
+                    Result.success(insertedNote)
+                } else {
+                    val message = parseErrorBody(response.bodyAsText())
+                    Result.failure(Exception(message))
+                }
+            } catch (e: ClientRequestException) {
+                val message = parseErrorBody(e.response.bodyAsText())
+                Result.failure(Exception(message))
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
         }
     }
 

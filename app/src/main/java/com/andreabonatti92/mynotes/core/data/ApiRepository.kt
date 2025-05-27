@@ -12,4 +12,6 @@ interface ApiRepository {
     suspend fun getNotes(): Result<List<Note>>
 
     suspend fun refresh(): Result<AccessTokenData>
+
+    suspend fun insertNote(title: String, content: String, color: Int): Result<Note>
 }
