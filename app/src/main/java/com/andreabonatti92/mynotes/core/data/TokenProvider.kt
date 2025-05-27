@@ -5,5 +5,5 @@ interface TokenProvider {
 
     suspend fun getRefreshToken(): String
 
-    suspend fun setAccessToken(newToken: String)
+    suspend fun saveAccessToken(newToken: String)
 }
