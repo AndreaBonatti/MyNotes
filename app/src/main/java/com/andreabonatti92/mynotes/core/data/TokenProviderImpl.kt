@@ -15,4 +15,8 @@ class TokenProviderImpl(
         return userPreferences.refreshTokenFlow.firstOrNull()
             ?: throw IllegalStateException("Refresh token not found!")
     }
+
+    override suspend fun setAccessToken(newToken: String) {
+        userPreferences.saveAccessToken(newToken)
+    }
 }

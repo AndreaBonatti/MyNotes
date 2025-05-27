@@ -42,4 +42,10 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
             preferences.remove(REFRESH_TOKEN_KEY)
         }
     }
+
+    suspend fun saveAccessToken(accessToken: String) {
+        dataStore.edit { preferences ->
+            preferences[ACCESS_TOKEN_KEY] = accessToken
+        }
+    }
 }
