@@ -14,6 +14,7 @@ import com.andreabonatti92.mynotes.core.data.TokenProvider
 import com.andreabonatti92.mynotes.core.data.TokenProviderImpl
 import com.andreabonatti92.mynotes.core.data.UserPreferences
 import com.andreabonatti92.mynotes.home.presentation.HomeViewModel
+import com.andreabonatti92.mynotes.notes.presentation.add_note.AddNoteViewModel
 import com.andreabonatti92.mynotes.notes.presentation.note_list.NoteListViewModel
 import com.andreabonatti92.mynotes.splash.SplashViewModel
 import io.ktor.client.engine.cio.CIO
@@ -52,4 +53,5 @@ val appModule = module {
     viewModel { HomeViewModel(userPreferences = get()) }
     viewModel { SplashViewModel(userPreferences = get()) }
     viewModel { NoteListViewModel(apiRepository = get()) }
+    viewModel { AddNoteViewModel(apiRepository = get()) }
 }
