@@ -1,6 +1,11 @@
 package com.andreabonatti92.mynotes.core.data
 
 import android.util.Log
+import com.andreabonatti92.mynotes.auth.data.model.ErrorResponse
+import com.andreabonatti92.mynotes.auth.data.model.LoginRequest
+import com.andreabonatti92.mynotes.auth.data.model.LoginResponse
+import com.andreabonatti92.mynotes.auth.data.model.RegisterRequest
+import com.andreabonatti92.mynotes.auth.data.model.TokenData
 import com.andreabonatti92.mynotes.notes.data.dto.NoteDto
 import com.andreabonatti92.mynotes.notes.data.mappers.toNote
 import com.andreabonatti92.mynotes.notes.domain.Note
@@ -18,8 +23,6 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 class RemoteApiRepository(
@@ -50,15 +53,6 @@ class RemoteApiRepository(
         }
     }
 
-    private fun parseErrorBody(body: String): String {
-        return try {
-            val error = Json.decodeFromString<ErrorResponse>(body)
-            error.detail
-        } catch (ex: Exception) {
-            "Invalid request"
-        }
-    }
-
     override suspend fun login(email: String, password: String): Result<TokenData> {
         return try {
             val response: HttpResponse = client.post("$baseUrl/auth/login") {
@@ -69,7 +63,7 @@ class RemoteApiRepository(
             if (response.status.isSuccess()) {
                 // Deserialize body into LoginResponse
                 val loginResponse: LoginResponse = response.body()
-                Result.success(loginResponse.data) // ✅ This is TokenData
+                Result.success(loginResponse.data)
             } else {
                 val message = parseErrorBody(response.bodyAsText())
                 Result.failure(Exception(message))
@@ -81,31 +75,6 @@ class RemoteApiRepository(
             Result.failure(e)
         }
     }
-
-    @Serializable
-    private data class RegisterRequest(val email: String, val password: String)
-
-    @Serializable
-    private data class LoginRequest(val email: String, val password: String)
-
-    @Serializable
-    data class LoginResponse(
-        val message: String,
-        val data: TokenData
-    )
-
-    @Serializable
-    data class TokenData(
-        @SerialName("access_token")
-        val accessToken: String,
-        @SerialName("refresh_token")
-        val refreshToken: String,
-        @SerialName("token_type")
-        val tokenType: String
-    )
-
-    @Serializable
-    data class ErrorResponse(val detail: String)
 
     override suspend fun getNotes(): Result<List<Note>> {
         return try {
@@ -130,6 +99,15 @@ class RemoteApiRepository(
             Result.failure(Exception(message))
         } catch (e: Exception) {
             Result.failure(e)
+        }
+    }
+
+    private fun parseErrorBody(body: String): String {
+        return try {
+            val error = Json.decodeFromString<ErrorResponse>(body)
+            error.detail
+        } catch (ex: Exception) {
+            "Invalid request"
         }
     }
 }
