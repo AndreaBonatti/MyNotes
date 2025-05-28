@@ -128,6 +128,7 @@ fun NoteListScreen(
                 text = { Text("Add note") },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
+                    .padding(WindowInsets.systemBars.asPaddingValues())
                     .padding(16.dp)
             )
         }
