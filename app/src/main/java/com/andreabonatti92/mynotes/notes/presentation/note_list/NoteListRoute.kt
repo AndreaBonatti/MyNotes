@@ -11,6 +11,7 @@ fun NoteListRoute(
     val viewModel: NoteListViewModel = koinViewModel()
 
     NoteListScreen(
-        viewModel = viewModel
+        viewModel = viewModel,
+        onNavigateToAddNote = {navController.navigate("add_note")}
     )
 }

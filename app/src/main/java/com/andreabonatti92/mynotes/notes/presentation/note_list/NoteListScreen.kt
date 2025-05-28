@@ -16,12 +16,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -37,7 +41,10 @@ import com.andreabonatti92.mynotes.notes.domain.Note
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun NoteListScreen(viewModel: NoteListViewModel) {
+fun NoteListScreen(
+    viewModel: NoteListViewModel,
+    onNavigateToAddNote: () -> Unit
+) {
     val noteListState by viewModel.noteListState.collectAsState()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
@@ -108,6 +115,20 @@ fun NoteListScreen(viewModel: NoteListViewModel) {
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(WindowInsets.systemBars.asPaddingValues())
+            )
+
+            ExtendedFloatingActionButton(
+                onClick = onNavigateToAddNote,
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add note"
+                    )
+                },
+                text = { Text("Add note") },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
             )
         }
     }
